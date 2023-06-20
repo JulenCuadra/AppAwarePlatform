@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: assemblyline-controller
+  name: assemblyline-controller-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assemblyline-controller
+  template:
+    metadata:
+      labels:
+        app: assemblyline-controller
+    spec:
+      containers:
+      - env:
+        - name: LEVEL_NAME
+          value: assemblyline
+        - name: LEVEL_NAME_PLURAL
+          value: assemblylines
+        - name: LOWER_LEVEL_NAME
+          value: asset
+        - name: LOWER_LEVEL_NAME_PLURAL
+          value: assets
+        - name: HIGHER_LEVEL_NAME
+          value: system
+        - name: HIGHER_LEVEL_NAME_PLURAL
+          value: systems
+        image: ekhurtado/gcis-fog:generic_app_management_level_controller-v4.0
+        imagePullPolicy: Always
+        name: assemblyline-controller
+        ports:
+        - containerPort: 80
+      nodeSelector:
+        node-role.kubernetes.io/master: 'true'
+      serviceAccountName: service-account-controller-assemblyline
